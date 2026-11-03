@@ -11,7 +11,7 @@
 // snapshot of every fixture is checked against it.
 import 'package:cmark_gfm_dart/cmark_gfm_dart.dart';
 
-import 'perf_tester.dart';
+import 'package:perf_tester/perf_tester.dart';
 import 'streaming_fixture.dart';
 
 String _render(CmarkNode node) => HtmlRenderer().render(node);

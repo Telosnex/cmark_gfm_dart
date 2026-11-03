@@ -1,12 +1,14 @@
 // ignore_for_file: avoid_print
 
+@Tags(['perf'])
+library;
+
 import 'dart:io';
 
 import 'package:cmark_gfm_dart/cmark_gfm_dart.dart';
 import 'package:path/path.dart' as path;
+import 'package:perf_tester/perf_tester.dart';
 import 'package:test/test.dart';
-
-import 'perf_tester.dart';
 
 /// Extract all text content from a CmarkNode tree.
 String getTextContent(CmarkNode root) {

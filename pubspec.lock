@@ -201,6 +201,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  perf_tester:
+    dependency: "direct dev"
+    description:
+      name: perf_tester
+      sha256: "518b1edae8262c0560bd4eb3b1c2ed2202999247cdbbc2489264bc9d53affbaf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   pool:
     dependency: transitive
     description:
@@ -338,7 +346,7 @@ packages:
     source: hosted
     version: "1.4.0"
   vm_service:
-    dependency: "direct dev"
+    dependency: transitive
     description:
       name: vm_service
       sha256: "45caa6c5917fa127b5dbcfbd1fa60b14e583afdc08bfc96dda38886ca252eb60"
