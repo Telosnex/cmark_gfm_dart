@@ -327,55 +327,63 @@ class CmarkNode {
 
   int get internalOffset => _html?.internalOffset ?? 0;
   set internalOffset(int value) {
-    if (value != 0 || _html != null)
+    if (value != 0 || _html != null) {
       (_html ??= _HtmlBlockFields()).internalOffset = value;
+    }
   }
 
   int get htmlBlockType => _html?.htmlBlockType ?? 0;
   set htmlBlockType(int value) {
-    if (value != 0 || _html != null)
+    if (value != 0 || _html != null) {
       (_html ??= _HtmlBlockFields()).htmlBlockType = value;
+    }
   }
 
   String? get htmlBlockEndTag => _html?.htmlBlockEndTag;
   set htmlBlockEndTag(String? value) {
-    if (value != null || _html != null)
+    if (value != null || _html != null) {
       (_html ??= _HtmlBlockFields()).htmlBlockEndTag = value;
+    }
   }
 
   /// The number of references/definitions recorded for footnote bookkeeping.
   int get footnoteReferenceIndex => _footnote?.referenceIndex ?? 0;
   set footnoteReferenceIndex(int value) {
-    if (value != 0 || _footnote != null)
+    if (value != 0 || _footnote != null) {
       (_footnote ??= _FootnoteFields()).referenceIndex = value;
+    }
   }
 
   /// For footnote definitions: how many times this footnote has been referenced.
   int get footnoteDefCount => _footnote?.defCount ?? 0;
   set footnoteDefCount(int value) {
-    if (value != 0 || _footnote != null)
+    if (value != 0 || _footnote != null) {
       (_footnote ??= _FootnoteFields()).defCount = value;
+    }
   }
 
   /// For footnote references: which reference number this is (1st, 2nd, 3rd...).
   int get footnoteRefIndex => _footnote?.refIndex ?? 0;
   set footnoteRefIndex(int value) {
-    if (value != 0 || _footnote != null)
+    if (value != 0 || _footnote != null) {
       (_footnote ??= _FootnoteFields()).refIndex = value;
+    }
   }
 
   /// For footnote references: the label of the definition.
   String get footnoteDefLabel => _footnote?.defLabel ?? '';
   set footnoteDefLabel(String value) {
-    if (value.isNotEmpty || _footnote != null)
+    if (value.isNotEmpty || _footnote != null) {
       (_footnote ??= _FootnoteFields()).defLabel = value;
+    }
   }
 
   /// Link to the containing footnote definition node, if any.
   CmarkNode? get parentFootnoteDefinition => _footnote?.parentDefinition;
   set parentFootnoteDefinition(CmarkNode? value) {
-    if (value != null || _footnote != null)
+    if (value != null || _footnote != null) {
       (_footnote ??= _FootnoteFields()).parentDefinition = value;
+    }
   }
 
   // ---- Lazy data fields ----

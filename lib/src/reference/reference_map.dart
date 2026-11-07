@@ -31,16 +31,13 @@ class CmarkReference {
 }
 
 class CmarkReferenceMap {
-  CmarkReferenceMap({int? maxRefSize}) : _maxRefSize = maxRefSize ?? 0xFFFFFFFF;
+  CmarkReferenceMap({int? maxRefSize}) : maxRefSize = maxRefSize ?? 0xFFFFFFFF;
 
   final Map<String, CmarkReference> _entries = <String, CmarkReference>{};
   int _refSize = 0;
-  int _maxRefSize;
+  int maxRefSize;
 
   int get size => _entries.length;
-
-  int get maxRefSize => _maxRefSize;
-  set maxRefSize(int value) => _maxRefSize = value;
 
   void resetUsage() {
     _refSize = 0;
@@ -131,7 +128,7 @@ class CmarkReferenceMap {
       return null;
     }
 
-    if (reference.size > _maxRefSize - _refSize) {
+    if (reference.size > maxRefSize - _refSize) {
       return null;
     }
     _refSize += reference.size;

@@ -205,10 +205,10 @@ packages:
     dependency: "direct dev"
     description:
       name: perf_tester
-      sha256: "518b1edae8262c0560bd4eb3b1c2ed2202999247cdbbc2489264bc9d53affbaf"
+      sha256: f836ea3f64787490ff2c7787220251b6472645e64d08e12acd8f738c62500533
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1"
+    version: "1.0.0"
   pool:
     dependency: transitive
     description:

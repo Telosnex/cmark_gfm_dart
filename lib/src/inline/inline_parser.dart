@@ -202,8 +202,9 @@ class InlineParser {
               subj.columnOffset = -subj.pos;
               // skipSpaces inline
               while (subj.pos < len &&
-                  (input[subj.pos] == 0x20 || input[subj.pos] == 0x09))
+                  (input[subj.pos] == 0x20 || input[subj.pos] == 0x09)) {
                 subj.pos++;
+              }
               newInl = (nlpos > 1 &&
                       input[nlpos - 1] == 0x20 &&
                       input[nlpos - 2] == 0x20)
@@ -438,8 +439,9 @@ class InlineParser {
       if (ch == 0x5C && _isLetter(subj.peekCharN(1))) {
         hasLatexCommand = true;
       }
-      if (ch == 0x3D || ch == 0x2B || ch == 0x3C || ch == 0x3E)
+      if (ch == 0x3D || ch == 0x2B || ch == 0x3C || ch == 0x3E) {
         hasOperator = true;
+      }
       if (ch == 0x0A || ch == 0x0D) {
         subj.pos = start;
         return null;
@@ -617,18 +619,22 @@ class InlineParser {
 
   int _scanToClosingBackticks(Subject subj, int openLen) {
     if (openLen > maxBackticks) return 0;
-    if (subj.scannedForBackticks && subj.backticks[openLen] <= subj.pos)
+    if (subj.scannedForBackticks && subj.backticks[openLen] <= subj.pos) {
       return 0;
+    }
     while (!subj.isEof()) {
-      while (subj.peekChar() != 0x60 && !subj.isEof()) subj.advance();
+      while (subj.peekChar() != 0x60 && !subj.isEof()) {
+        subj.advance();
+      }
       if (subj.isEof()) break;
       var numticks = 0;
       while (subj.peekChar() == 0x60) {
         subj.advance();
         numticks++;
       }
-      if (numticks <= maxBackticks)
+      if (numticks <= maxBackticks) {
         subj.recordBacktickRun(numticks, subj.pos - numticks);
+      }
       if (numticks == openLen) return subj.pos;
     }
     subj.scannedForBackticks = true;
@@ -714,8 +720,10 @@ class InlineParser {
   int _scanAutolinkUri(Uint8List data, int pos) {
     if (pos >= data.length) return 0;
     final first = data[pos];
-    if (!((first >= 0x41 && first <= 0x5A) || (first >= 0x61 && first <= 0x7A)))
+    if (!((first >= 0x41 && first <= 0x5A) ||
+        (first >= 0x61 && first <= 0x7A))) {
       return 0;
+    }
     final remaining =
         utf8.decode(Uint8List.sublistView(data, pos), allowMalformed: true);
     final match = _autolinkUriRe.firstMatch(remaining)?.group(0);
@@ -760,25 +768,29 @@ class InlineParser {
     final numDelims = _scanDelims(subj, c, canOpen, canClose);
     final delims = String.fromCharCodes(List.filled(numDelims, c));
     final inlText = _makeStr(subj, subj.pos - numDelims, subj.pos - 1, delims);
-    if (canOpen[0] || canClose[0])
+    if (canOpen[0] || canClose[0]) {
       _pushDelimiter(subj, c, canOpen[0], canClose[0], inlText);
+    }
     return inlText;
   }
 
   int _codePointAt(Uint8List data, int pos) {
     final first = data[pos];
     if (first < 0x80) return first;
-    if ((first & 0xE0) == 0xC0 && pos + 1 < data.length)
+    if ((first & 0xE0) == 0xC0 && pos + 1 < data.length) {
       return ((first & 0x1F) << 6) | (data[pos + 1] & 0x3F);
-    if ((first & 0xF0) == 0xE0 && pos + 2 < data.length)
+    }
+    if ((first & 0xF0) == 0xE0 && pos + 2 < data.length) {
       return ((first & 0x0F) << 12) |
           ((data[pos + 1] & 0x3F) << 6) |
           (data[pos + 2] & 0x3F);
-    if ((first & 0xF8) == 0xF0 && pos + 3 < data.length)
+    }
+    if ((first & 0xF8) == 0xF0 && pos + 3 < data.length) {
       return ((first & 0x07) << 18) |
           ((data[pos + 1] & 0x3F) << 12) |
           ((data[pos + 2] & 0x3F) << 6) |
           (data[pos + 3] & 0x3F);
+    }
     return first;
   }
 
@@ -790,15 +802,18 @@ class InlineParser {
     final startPos = subj.pos;
     if (startPos > 0) {
       var beforePos = startPos - 1;
-      while (beforePos > 0 && (subj.input[beforePos] >> 6) == 2) beforePos--;
+      while (beforePos > 0 && (subj.input[beforePos] >> 6) == 2) {
+        beforePos--;
+      }
       beforeChar = _codePointAt(subj.input, beforePos);
     }
     while (subj.peekChar() == c) {
       numDelims++;
       subj.advance();
     }
-    if (subj.pos < subj.input.length)
+    if (subj.pos < subj.input.length) {
       afterChar = _codePointAt(subj.input, subj.pos);
+    }
     final leftFlanking = numDelims > 0 &&
         !_isSpace(afterChar) &&
         (!_isUnicodePunct(afterChar) ||
@@ -865,8 +880,9 @@ class InlineParser {
         if (!openerFound) {
           ob[(oldCloser.length % 3) * 3 + _charIdx(oldCloser.delimChar)] =
               oldCloser.position;
-          if (!oldCloser.canOpen && stackBottom == 0)
+          if (!oldCloser.canOpen && stackBottom == 0) {
             _removeDelimiter(oldCloser);
+          }
         }
       } else {
         closer = closer.next;
@@ -901,12 +917,14 @@ class InlineParser {
     closer.length = closerNumChars;
     final openerText = openerInl.content.toString();
     openerInl.content.clear();
-    if (openerNumChars > 0)
+    if (openerNumChars > 0) {
       openerInl.content.write(openerText.substring(0, openerNumChars));
+    }
     final closerText = closerInl.content.toString();
     closerInl.content.clear();
-    if (closerNumChars > 0)
+    if (closerNumChars > 0) {
       closerInl.content.write(closerText.substring(0, closerNumChars));
+    }
     var delim = closer.previous;
     while (delim != null && delim != opener) {
       final tmp = delim.previous;
@@ -970,10 +988,11 @@ class InlineParser {
           if (subj.peekAt(endall) == 0x29) {
             subj.pos = endall + 1;
             var titleStr = '';
-            if (endtitle > starttitle)
+            if (endtitle > starttitle) {
               titleStr = utf8.decode(
                   Uint8List.sublistView(subj.input, starttitle, endtitle),
                   allowMalformed: true);
+            }
             return _createLink(subj, opener, isImage, cleanUrl(urlResult.url),
                 cleanTitle(titleStr), afterLinkTextPos);
           } else {
@@ -1176,8 +1195,9 @@ int _scanHtmlTag(Uint8List data, int offset) {
     if (i + 2 < len && data[i + 1] == 0x2D && data[i + 2] == 0x2D) {
       var j = i + 1;
       while (j + 2 < len) {
-        if (data[j] == 0x2D && data[j + 1] == 0x2D && data[j + 2] == 0x3E)
+        if (data[j] == 0x2D && data[j + 1] == 0x2D && data[j + 2] == 0x3E) {
           return j + 3 - offset;
+        }
         j++;
       }
       return 0;
@@ -1192,14 +1212,17 @@ int _scanHtmlTag(Uint8List data, int offset) {
         data[i + 7] == 0x5B) {
       var j = i + 8;
       while (j + 2 < len) {
-        if (data[j] == 0x5D && data[j + 1] == 0x5D && data[j + 2] == 0x3E)
+        if (data[j] == 0x5D && data[j + 1] == 0x5D && data[j + 2] == 0x3E) {
           return j + 3 - offset;
+        }
         j++;
       }
       return 0;
     }
     var j = i + 1;
-    while (j < len && data[j] != 0x3E) j++;
+    while (j < len && data[j] != 0x3E) {
+      j++;
+    }
     if (j == len) return 0;
     return j + 1 - offset;
   } else if (ch == 0x3F) {
@@ -1219,9 +1242,13 @@ int _scanHtmlTag(Uint8List data, int offset) {
     }
     if (!_isAlphaByte(data[j])) return 0;
     j++;
-    while (j < len && _isAlnumHyphenByte(data[j])) j++;
+    while (j < len && _isAlnumHyphenByte(data[j])) {
+      j++;
+    }
     if (isClosing) {
-      while (j < len && _isHtmlSpace(data[j])) j++;
+      while (j < len && _isHtmlSpace(data[j])) {
+        j++;
+      }
       if (j < len && data[j] == 0x3E) return j + 1 - offset;
       return 0;
     }
@@ -1242,19 +1269,26 @@ int _scanHtmlTag(Uint8List data, int offset) {
       if (!sawWhitespace) return 0;
       if (!_isAttrNameStart(current)) return 0;
       j++;
-      while (j < len && _isAttrNameChar(data[j])) j++;
+      while (j < len && _isAttrNameChar(data[j])) {
+        j++;
+      }
       final whitespaceStart = j;
       var afterWhitespace = j;
-      while (afterWhitespace < len && _isHtmlSpace(data[afterWhitespace]))
+      while (afterWhitespace < len && _isHtmlSpace(data[afterWhitespace])) {
         afterWhitespace++;
+      }
       if (afterWhitespace < len && data[afterWhitespace] == 0x3D) {
         j = afterWhitespace + 1;
-        while (j < len && _isHtmlSpace(data[j])) j++;
+        while (j < len && _isHtmlSpace(data[j])) {
+          j++;
+        }
         if (j >= len) return 0;
         final quote = data[j];
         if (quote == 0x22 || quote == 0x27) {
           j++;
-          while (j < len && data[j] != quote) j++;
+          while (j < len && data[j] != quote) {
+            j++;
+          }
           if (j == len) return 0;
           j++;
         } else {
@@ -1262,8 +1296,9 @@ int _scanHtmlTag(Uint8List data, int offset) {
           while (j < len) {
             final v = data[j];
             if (_isHtmlSpace(v) || v == 0x3E) break;
-            if (v == 0x22 || v == 0x27 || v == 0x3C || v == 0x3D || v == 0x60)
+            if (v == 0x22 || v == 0x27 || v == 0x3C || v == 0x3D || v == 0x60) {
               return 0;
+            }
             hasValue = true;
             j++;
           }

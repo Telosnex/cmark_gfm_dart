@@ -59,7 +59,7 @@ bool linkLabel(Uint8List input, int startPos, LinkLabelResult result) {
   return false;
 }
 
-/// Scan link URL in (url) or <url> form.
+/// Scan link URL in `(url)` or `<url>` form.
 /// From manual_scan_link_url() in inlines.c
 int scanLinkUrl(Uint8List input, int offset, LinkUrlResult result) {
   if (offset >= input.length) {
