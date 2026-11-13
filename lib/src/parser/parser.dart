@@ -19,6 +19,8 @@ class CmarkParser {
                   enableAutolinkExtension: options.enableAutolinkExtension,
                   singleTildeStrikethrough: options.singleTildeStrikethrough,
                   allowExtraTableDelimiters: options.allowExtraTableDelimiters,
+                  keepUndefinedFootnoteReferences:
+                      options.keepUndefinedFootnoteReferences,
                 )
               : options,
         );

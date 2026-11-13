@@ -208,7 +208,10 @@ class HtmlRenderer {
         }
         break;
       case CmarkNodeType.footnoteReference:
-        if (entering) {
+        if (entering && node.footnoteReferenceIndex == 0) {
+          // Undefined, kept by keepUndefinedFootnoteReferences: GFM's text.
+          _output.write(_escapeHtml('[^${node.content}]'));
+        } else if (entering) {
           final label = escapeHref(node.content.toString());
           final defIndex = node
               .footnoteReferenceIndex; // The footnote's global index (1, 2, 3...)

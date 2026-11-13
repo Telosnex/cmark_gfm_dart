@@ -20,6 +20,7 @@ class CmarkParserOptions {
     this.enableAutolinkExtension = true,
     this.singleTildeStrikethrough = true,
     this.allowExtraTableDelimiters = true,
+    this.keepUndefinedFootnoteReferences = false,
   });
 
   final bool enableMath;
@@ -41,4 +42,14 @@ class CmarkParserOptions {
   /// When false, only `~~double~~` creates strikethrough, and single
   /// tilde is treated as literal text (useful when `~` means "approximately").
   final bool singleTildeStrikethrough;
+
+  /// Keep `[^label]` as a footnote reference when no definition has that
+  /// label. GFM turns it back into text. A streaming renderer can enable this
+  /// while definitions are still to come, so a reference does not appear as
+  /// text and then change into a footnote.
+  ///
+  /// An undefined reference has [CmarkNode.footnoteReferenceIndex] 0, its
+  /// label in [CmarkNode.footnoteDefLabel], and the occurrence of that label
+  /// in [CmarkNode.footnoteRefIndex]. The HTML renderer writes it as text.
+  final bool keepUndefinedFootnoteReferences;
 }

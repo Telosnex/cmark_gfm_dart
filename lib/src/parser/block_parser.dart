@@ -541,6 +541,8 @@ class BlockParser {
 
     // Second pass: link references to definitions and assign indices
     var ix = 0;
+    final keepUndefined = options.keepUndefinedFootnoteReferences;
+    Map<String, int>? undefinedCounts;
     for (final node in references) {
       final label = node.contentString;
       final footnote = footnoteMap.lookup(label);
@@ -559,6 +561,13 @@ class BlockParser {
         node.footnoteReferenceIndex = footnote.node.footnoteReferenceIndex;
 
         // For rendering, we need to access the definition's label
+        node.footnoteDefLabel = label;
+      } else if (keepUndefined) {
+        final counts = undefinedCounts ??= <String, int>{};
+        final count = (counts[label] ?? 0) + 1;
+        counts[label] = count;
+        node.footnoteReferenceIndex = 0;
+        node.footnoteRefIndex = count;
         node.footnoteDefLabel = label;
       } else {
         _convertFootnoteReferenceToText(node, label);

@@ -1,3 +1,10 @@
+## 1.0.1
+
+- `CmarkParserOptions.keepUndefinedFootnoteReferences`: keep `[^label]` as a
+  footnote reference when no definition has that label, so a streamed
+  reference does not show as text until its definition arrives. Off by
+  default, which keeps GFM's behavior.
+
 ## 1.0.0
 
 - First stable release. Requires perf_tester 1.0.0 for its tests.
